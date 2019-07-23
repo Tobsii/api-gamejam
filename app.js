@@ -15,5 +15,11 @@ app.use('/tiles', tiles);
 app.get('/status', (req, res) => res.send('Working!'));
 
 // Port 8080 for Google App Engine
-app.set('port', process.env.PORT || 3000);
-app.listen(3000);
+//app.set('port', process.env.PORT || 3000);
+//app.listen(3000);
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Listening on http://localhost:${PORT}`);
+});

@@ -26,7 +26,6 @@ router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
 // TODO Query anpassen, anzahl tiles als variablen?
 router.get('/getmoretiles/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
-    // TODO oder man geht über die IDs, also erst get ID des ortes, dann get angrenzende reihen
     var longmax = req.params.longtitude + 0.0;
     var longmin = req.params.longtitude - 0.0;
     var latmax = 0.0;
@@ -39,5 +38,9 @@ router.get('/getmoretiles/:longtitude/:latitude', function (req, res, next) {
         }
       );
   });
+
+  // TODO : Generate a Tile 
+
+  
 
 module.exports = router;

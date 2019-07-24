@@ -14,7 +14,7 @@ const connection = require('../database');
 router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(
-        "SELECT * FROM `tiles` WHERE longtitude = ? AND latitude = ?", [req.params.longtitude, req.params.latitude],
+        "SELECT * FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ?", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
         function(error, results, fields) {
           if (error) throw error;
           res.json(results);

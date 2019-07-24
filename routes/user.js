@@ -1,27 +1,5 @@
 // ALL ROUTES FOR USER-STUFF
 /*
-- delete ALL
-- Get a single user -> user/getuser/:userId
-- Get Users Position -> user/getuserposition/:userId
-- Get Users Name -> user/getusername/:userId 
-- Get Users Health -> user/getuserhealth/:userId
-- Get Users immunsystem -> user/getuserimmunsystem/:userId/:userId
-- Get users Level -> user/getuserlevel/:userId
-- Get Users Buildings (All) -> user//getuserbuildings/:userId
-- Get Users Items (All) -> user/getuseritems/:userId
-- Get Users Sellitems (All) -> user/getusersellitems/:userId
-- Get Users Skills (All) -> user/getuserskills/:userId
-- Delete a user -> user/deleteuser/:userId
-- Create a new User -> user/newuser/:name
-- Update Users health -> user/updateuserhealth/:userid/:health
-- Update users strength -> user/updateuserstrength/:userid/:strength
-- Update Users Level -> user/updateuserslevel/:userid/:level
-- Update users position -> user/updateusersposition/:userid/:latitude/:longtitude
-- Update users Buildings -> user (TODO)
-- Update Users Items -> user (TODO)
-- Update users Sellitems -> user (TODO)
-- Update users Skills -> user (TODO)
-
 - TODO: 
 + get part of json
 + update part of json
@@ -83,11 +61,13 @@ router.get('/getuserposition/:userId', function (req, res, next) {
 // Get Users Name
 router.get('/getusername/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
+  res.set('Content-Type', 'application/json')
+  // req.SetRequestHeader("Content-Type", "application/json");
   connection.query(
       "SELECT name, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
-        res.json(results);
+        // res.json(results);
       }
     );
 });

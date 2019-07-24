@@ -10,7 +10,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../database');
 
-// GET a single tile 
+// GET a single tile Works (ToDo - add Range of 1 and get more tiles (9 insgesamt))
 router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(

@@ -10,6 +10,18 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../database');
 
+//MAINTENANCE - delete all rows in users
+router.get('/deleteall', function (req, res, next) {
+  console.log('Request Type:', req.method);
+  connection.query(
+      "TRUNCATE TABLE `tiles`",
+      function(error, results, fields) {
+        if (error) throw error;
+        res.json(results);
+      }
+    );
+});
+
 // GET a single tile Works (ToDo - add Range of 1 and get more tiles (9 insgesamt))
 router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);

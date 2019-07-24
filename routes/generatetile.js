@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../database');
 const Promise = require('promise');
-
+const lerp = require('lerp');
 
 // Long: große Zahl , zb 48.468235
 // lat: kleine zahl , zb 8.210345
-
 
 router.get('/:longtitude/:latitude', function (req, res) {
     console.log('Request Type:', req.method);
@@ -117,22 +116,124 @@ router.get('/:longtitude/:latitude', function (req, res) {
         console.log('Anzahl:', anzahl);
     }
 
-    for (var i = 0; i <= 11; i++){
-        for (var a = 0; a <= 11; a++){
+    for (var i = 0; i < 11; i++){
+        for (var a = 0; a < 11; a++){
             msg();
-            longUpperCorner+=0.05;
+            longUpperCorner+=0.01;
         }
-        latUpperCorner+=0.05;
+        latUpperCorner+=0.01;
     }
 
+    // generiere Ressourcen für die unbelegen tiles
+    var wald =  []; // 40 - 130
+    var stein = [];  // 35 - 120
+    var lehm =  []; // 20 - 70
+    var eisen  =  []; // 10 - 50
+    var kupfer  =  []; // 10 - 50 
+    var gold  =  []; // 2 - 20
+    var silber  =  []; // 5 - 25
+    var schwefel  =  []; // 3 - 10
+    var pech  =  []; // 1 - 25
+    var weideland  =  []; //30 - 100
+    var boden =  []; // 30 - 100
+    var edelsteine =  []; // 1 - 5
+    var wasser = []; // 70 - 140
 
-    // iteriere nochmal und generiere Ressourcen
-    function generateRessource(){
-
+    function generateRessource(min, max, theArray){
+        for(var f = 0; f < anzahl; f++){
+            var random = (Math.floor(Math.random() * 10) + 1)*0.1;
+            var quantity = lerp(min, max, random);
+            console.log('Random Lerp for Ressources:', random);
+            theArray.push(quantity);
+        }
     }
 
+    generateRessource(40,99,wald);
+    generateRessource(35,99,stein);
+    generateRessource(20,70,lehm);
+    generateRessource(10,50,eisen);
+    generateRessource(10,50,kupfer);
+    generateRessource(2,20,gold);
+    generateRessource(5,25,silber);
+    generateRessource(3,10,schwefel);
+    generateRessource(1,25,pech);
+    generateRessource(30,99, weideland);
+    generateRessource(30, 99, boden);
+    generateRessource(1, 5, edelsteine);
+    generateRessource(70, 99, wasser);
+    console.log('Generated:', wald[5]);
+
+
+    // "\'"+ name + "\'" -> Escape ANführungszeichen
     // Speichere jedes neue Tile in der Datenbank
-  });
+
+    function generateATile(longmaxgenerate, longmingenerate, buildinggenerate, ressourcesgenerate, eventsgenerate, dungeonsgenerate, latmaxgenerate, latmingenerate) {
+        return new Promise(function(resolve,reject) {
+            var sql = "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")";
+            // console.log('SQL:', sql);
+            connection.query(
+                "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")", 
+                [longmaxgenerate],
+                function(error, results, fields) {
+                    if (error) throw error;1
+                    resolve(results.insertId);
+                }
+    
+            );
+        });
+    }
   
+    async function tile(longmaxtile, longmintile, latmaxtile, latmintile) {
+        var answer = await lookAtTiles();
+        console.log('Message Tile:', answer);
+        if(Object.keys(answer).length === 0){
+            // Generate Gessources
+            var ressourcen = generateRessourcesForTiles(); // for database items
+            var ressourceJSON = JSON.stringify(ressourcen);
+
+            var nextanswer = await generateATile(longmaxtile, longmintile, {}, ressourceJSON, {}, {}, latmaxtile, latmintile);
+
+        }
+
+        console.log('Message:', nextanswer);
+    }
+
+    // Reset long and lat
+    longUpperCorner = (Math.round(longtitude*1000)/1000) - 0.05; 
+    latUpperCorner = (Math.round(latitude*1000)/1000) - 0.05;
+    console.log('Long:', longUpperCorner);
+    console.log('Lat:', latUpperCorner);
+    for (var r = 0; r < 11; r++){
+        for (var a = 0; a < 11; a++){
+            var longminForTile = longUpperCorner;
+            var longmaxForTile = longUpperCorner + 0.01;
+            var latmaxForTile = latUpperCorner +0.1;
+            var latminForTile= latUpperCorner;
+            tile(longmaxForTile, longminForTile, latmaxForTile, latminForTile);
+            longUpperCorner+=0.01;
+        }
+        latUpperCorner+=0.01;
+    }
+
+    function generateRessourcesForTiles(){
+        var tempRessources = {};
+        tempRessources.wald = wald[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.stein = stein[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.lehm = lehm[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.eisen = eisen[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.kupfer = kupfer[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.gold = gold[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.silber = silber[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.schwefel = schwefel[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.pech = pech[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.weideland = weideland[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.boden = boden[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.edelsteine = edelsteine[Math.floor(Math.random() * anzahl) + 1];
+        tempRessources.wasser = wasser[Math.floor(Math.random() * anzahl) + 1];
+
+        return tempRessources;
+    }
+    
+  });
 
 module.exports = router;

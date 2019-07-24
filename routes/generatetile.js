@@ -8,7 +8,7 @@ const Promise = require('promise');
 // lat: kleine zahl , zb 8.210345
 
 
-router.get('/:longtitude/:latitude', function (req, res, next) {
+router.get('/:longtitude/:latitude', function (req, res) {
     console.log('Request Type:', req.method);
     
     var anzahl = 0;
@@ -20,7 +20,8 @@ router.get('/:longtitude/:latitude', function (req, res, next) {
     var latUpperCorner = (Math.round(latitude*1000)/1000) - 0.05;
 
     // Iteriere durch das Rechteck - speicher, wie viele Tiles davon leer sind und generiert werden müssen
-    // TEST - check result works
+    
+    // VERSUCHE
     /*
     connection.query(
         "SELECT * FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ?", [longUpperCorner, longUpperCorner, latUpperCorner, latUpperCorner],
@@ -32,7 +33,6 @@ router.get('/:longtitude/:latitude', function (req, res, next) {
           }
         }
       );
-      */
 
       function checkIfExist(){
         setTimeout(function() {
@@ -51,7 +51,7 @@ router.get('/:longtitude/:latitude', function (req, res, next) {
         }, 2000);
       }
 
-      /*
+
       var promiseArray = [];
 
       for (var i = 0; i <= 11; i++){
@@ -67,9 +67,7 @@ router.get('/:longtitude/:latitude', function (req, res, next) {
       }
     res.send(await Promise.all(promiseArray));
     console.log('PromiseArray', promiseArray);
-    */
     
-    /*
     for (var i = 0; i <= 11; i++){
         for (var a = 0; a <= 11; a++){
             
@@ -108,21 +106,30 @@ router.get('/:longtitude/:latitude', function (req, res, next) {
     }
   
     async function msg() {
-        const msg = await lookAtTiles();
+        var msg = await lookAtTiles();
         console.log('Message:', msg);
-      }
+        console.log('Type of Message:', typeof(msg));
+        console.log('Länge of Message:', Object.keys(msg).length);
 
-      for (var i = 0; i <= 11; i++){
+        if(Object.keys(msg).length === 0)
+            anzahl++;
+
+        console.log('Anzahl:', anzahl);
+    }
+
+    for (var i = 0; i <= 11; i++){
         for (var a = 0; a <= 11; a++){
-            var text = msg();
-            console.log('msg',text);
+            msg();
             longUpperCorner+=0.05;
         }
         latUpperCorner+=0.05;
-
     }
 
+
     // iteriere nochmal und generiere Ressourcen
+    function generateRessource(){
+
+    }
 
     // Speichere jedes neue Tile in der Datenbank
   });

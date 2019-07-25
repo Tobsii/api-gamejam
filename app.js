@@ -8,22 +8,22 @@ const connection = require('./database');
 const user = require('./routes/user');
 const tiles = require('./routes/tiles');
 const tilesgeneration = require('./routes/generatetile');
-const test = require('./routes/testroute');
+// const test = require('./routes/testroute');
 // Mache externe Routes verwendbar
 app.use('/user', user);
 app.use('/tiles', tiles);
 app.use('/generatetile', tilesgeneration);
-app.use('/test', test);
+//app.use('/test', test);
 
 // zeigt bei .../status den Text "Working" auf der Seite an
 app.get('/status', (req, res) => res.send('API is Working!'));
 
 // Port 8080 for Google App Engine
-//app.set('port', process.env.PORT || 3000);
-//app.listen(3000);
+app.set('port', process.env.PORT || 3000);
+app.listen(3000);
 
-const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Listening on http://localhost:${PORT}`);
-});
+//app.listen(PORT, () => {
+//  console.log(`Listening on http://localhost:${PORT}`);
+//});

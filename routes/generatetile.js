@@ -15,8 +15,8 @@ router.get('/:longtitude/:latitude', function (req, res) {
     var latitude = req.params.latitude;
 
     // Rundet auf 3 Kommastellen und wirft den Rest weg, um die obere Rechte Ecke des Quadrates zu bekommen
-    var longUpperCorner = (Math.round(longtitude*1000)/1000) - 0.05; 
-    var latUpperCorner = (Math.round(latitude*1000)/1000) - 0.05;
+    var longUpperCorner = (Math.round(longtitude*1000)/1000) - 0.03; 
+    var latUpperCorner = (Math.round(latitude*1000)/1000) - 0.03;
 
     // Iteriere durch das Rechteck - speicher, wie viele Tiles davon leer sind und generiert werden müssen
     
@@ -106,7 +106,7 @@ router.get('/:longtitude/:latitude', function (req, res) {
   
     async function msg() {
         var msg = await lookAtTiles();
-        console.log('Message:', msg);
+        console.log('Message von Look at Tile:', msg);
         console.log('Type of Message:', typeof(msg));
         console.log('Länge of Message:', Object.keys(msg).length);
 
@@ -116,13 +116,14 @@ router.get('/:longtitude/:latitude', function (req, res) {
         console.log('Anzahl:', anzahl);
     }
 
-    for (var i = 0; i < 11; i++){
-        for (var a = 0; a < 11; a++){
+    for (var i = 0; i < 7; i++){
+        for (var a = 0; a < 7; a++){
             msg();
             longUpperCorner+=0.01;
         }
         latUpperCorner+=0.01;
     }
+    
 /*
     // generiere Ressourcen für die unbelegen tiles
     var wald =  []; // 40 - 130
@@ -163,17 +164,64 @@ router.get('/:longtitude/:latitude', function (req, res) {
     generateRessource(70, 99, wasser);
     console.log('Generated:', wald[5]);
 
+*/
 
+    // Generate Ressources Simple
+    function Randomize(min, max){
+        return Math.floor(Math.random() * max) + min;
+    }
+    
     // "\'"+ name + "\'" -> Escape ANführungszeichen
+    // OLD QUERY "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")"
     // Speichere jedes neue Tile in der Datenbank
 
     function generateATile(longmaxgenerate, longmingenerate, buildinggenerate, ressourcesgenerate, eventsgenerate, dungeonsgenerate, latmaxgenerate, latmingenerate) {
+        var wald = Randomize(40, 99);
+        var stein = Randomize(35, 99);
+        var lehm = Randomize(20, 70);
+        var kupfer = Randomize(10, 50);
+        var schwefel = Randomize(3, 10);
+        var eisen = Randomize(10, 50);
+        var silber = Randomize(5, 25);
+        var gold = Randomize(2, 20);
+        var edelstein = Randomize(1, 5);
         return new Promise(function(resolve,reject) {
-            var sql = "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")";
-            // console.log('SQL:', sql);
+            var sql = `INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin)
+            VALUES (
+                ${longmaxgenerate} ,
+                ${longmingenerate} ,
+                NULL,
+                JSON_OBJECT(
+                    "wald",
+                    ${wald},
+                    "stein",
+                    ${stein},
+                    "lehm",
+                    ${lehm},
+                    "kupfer",
+                    ${kupfer},
+                    "schwefel",
+                    ${schwefel},
+                    "eisen",
+                    ${eisen},
+                    "silber",
+                    ${silber},
+                    "gold",
+                    ${gold},
+                    "edelstein",       
+                    ${edelstein}
+                    ),    
+                NULL,
+                NULL, 
+                ${latmaxgenerate},
+                ${latmingenerate}
+            );
+            
+        `;
+            console.log('SQL:', sql);
+
             connection.query(
-                "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")", 
-                [longmaxgenerate],
+                sql, [longmaxgenerate],
                 function(error, results, fields) {
                     if (error) throw error;1
                     resolve(results.insertId);
@@ -188,34 +236,36 @@ router.get('/:longtitude/:latitude', function (req, res) {
         console.log('Message Tile:', answer);
         if(Object.keys(answer).length === 0){
             // Generate Gessources
-            var ressourcen = generateRessourcesForTiles(); // for database items
-            var ressourceJSON = JSON.stringify(ressourcen);
+            // var ressourcen = generateRessourcesForTiles(); // for database items
+            // var ressourceJSON = JSON.stringify(ressourcen);
 
-            var nextanswer = await generateATile(longmaxtile, longmintile, {}, ressourceJSON, {}, {}, latmaxtile, latmintile);
+            var nextanswer = await generateATile(longmaxtile, longmintile, {}, {}, {}, {}, latmaxtile, latmintile);
 
         }
 
-        console.log('Message:', nextanswer);
+        console.log('Message von Generate tile:', nextanswer);
     }
 
     // Reset long and lat
-    longUpperCorner = (Math.round(longtitude*1000)/1000) - 0.05; 
-    latUpperCorner = (Math.round(latitude*1000)/1000) - 0.05;
+    longUpperCorner = (Math.round(longtitude*1000)/1000) - 0.03; 
+    latUpperCorner = (Math.round(latitude*1000)/1000) - 0.03;
     console.log('Long:', longUpperCorner);
     console.log('Lat:', latUpperCorner);
-    for (var r = 0; r < 11; r++){
-        for (var a = 0; a < 11; a++){
+
+    for (var r = 0; r < 7; r++){
+        for (var a = 0; a < 7; a++){
             var longminForTile = longUpperCorner;
             var longmaxForTile = longUpperCorner + 0.01;
-            var latmaxForTile = latUpperCorner +0.1;
+            var latmaxForTile = latUpperCorner + 0.1;
             var latminForTile= latUpperCorner;
             tile(longmaxForTile, longminForTile, latmaxForTile, latminForTile);
             longUpperCorner+=0.01;
+            console.log('Second for Done:', longUpperCorner);
         }
         latUpperCorner+=0.01;
     }
 
-    function generateRessourcesForTiles(){
+    /*function generateRessourcesForTiles(){
         var tempRessources = {};
         tempRessources.wald = wald[Math.floor(Math.random() * anzahl) + 1];
         tempRessources.stein = stein[Math.floor(Math.random() * anzahl) + 1];

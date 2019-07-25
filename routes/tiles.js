@@ -34,6 +34,19 @@ router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
       );
   });
 
+  // Get ressources from a Single Tile
+  router.get('/gettileressources/:longtitude/:latitude', function (req, res, next) {
+    console.log('Request Type:', req.method);
+    connection.query(
+        "SELECT resources FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ?", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
+        function(error, results, fields) {
+          if (error) throw error;
+          res.json(results);
+        }
+      );
+  });
+
+
 // GET center and neighbours 
 // TODO Query anpassen, anzahl tiles als variablen?
 router.get('/getmoretiles/:longtitude/:latitude', function (req, res, next) {
@@ -43,16 +56,13 @@ router.get('/getmoretiles/:longtitude/:latitude', function (req, res, next) {
     var latmax = 0.0;
     var latmin = 0.0;
     connection.query(
-        "SELECT * FROM `tiles` WHERE longtitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ?", [longmin, longmax, latmin, latmax],
+        "SELECT * FROM `tiles` WHERE longtitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ? LIMIT 5", [longmin, longmax, latmin, latmax],
         function(error, results, fields) {
           if (error) throw error;
           res.json(results);
         }
       );
   });
-
-  // TODO : Generate a Tile 
-
   
 
 module.exports = router;

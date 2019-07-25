@@ -123,7 +123,7 @@ router.get('/:longtitude/:latitude', function (req, res) {
         }
         latUpperCorner+=0.01;
     }
-
+/*
     // generiere Ressourcen für die unbelegen tiles
     var wald =  []; // 40 - 130
     var stein = [];  // 35 - 120
@@ -233,7 +233,7 @@ router.get('/:longtitude/:latitude', function (req, res) {
 
         return tempRessources;
     }
-    
+    */
   });
 
 module.exports = router;

@@ -8,10 +8,12 @@ const connection = require('./database');
 const user = require('./routes/user');
 const tiles = require('./routes/tiles');
 const tilesgeneration = require('./routes/generatetile');
+const test = require('./routes/testroute');
 // Mache externe Routes verwendbar
 app.use('/user', user);
 app.use('/tiles', tiles);
 app.use('/generatetile', tilesgeneration);
+app.use('/test', test);
 
 // zeigt bei .../status den Text "Working" auf der Seite an
 app.get('/status', (req, res) => res.send('API is Working!'));

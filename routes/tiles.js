@@ -22,7 +22,7 @@ router.get('/deleteall', function (req, res, next) {
     );
 });
 
-// GET a single tile Works (ToDo - add Range of 1 and get more tiles (9 insgesamt))
+// GET a single tile (All)
 router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(
@@ -34,7 +34,7 @@ router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
       );
   });
 
-  // Get ressources from a Single Tile
+  // Get ressources from a Single Tile 
   router.get('/gettileressources/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(
@@ -48,20 +48,43 @@ router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
 
 
 // GET center and neighbours 
-// TODO Query anpassen, anzahl tiles als variablen?
+// TODO QUERY in Ordnung bringen
 router.get('/getmoretiles/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
-    var longmax = req.params.longtitude + 0.0;
-    var longmin = req.params.longtitude - 0.0;
-    var latmax = 0.0;
-    var latmin = 0.0;
-    connection.query(
-        "SELECT * FROM `tiles` WHERE longtitude BETWEEN ? AND ? AND latitude BETWEEN ? AND ? LIMIT 5", [longmin, longmax, latmin, latmax],
-        function(error, results, fields) {
-          if (error) throw error;
-          res.json(results);
-        }
-      );
+    var longmax = parseFloat(req.params.longtitude) + 0.02;
+    var longmin = req.params.longtitude - 0.02;
+    var latmax = parseFloat(req.params.latitude) + 0.01;
+    var latmin = req.params.latitude - 0.02;
+    var sql = `(SELECT * 
+    FROM tiles 
+    WHERE tilesid >= (SELECT tilesid FROM tiles WHERE 
+      longmax > ${req.params.longtitude} AND 
+      longmin < ${req.params.longtitude} AND 
+      latmax > ${req.params.latitude} AND 
+      latmin < ${req.params.latitude}
+    LIMIT 1)
+    ORDER BY tilesid
+    LIMIT 5)
+    UNION
+    (SELECT * 
+    FROM tiles 
+    WHERE tilesid < (SELECT tilesid FROM tiles WHERE 
+      longmax > ${req.params.longtitude} AND 
+      longmin < ${req.params.longtitude} AND 
+      latmax > ${req.params.latitude} AND 
+      latmin < ${req.params.latitude}
+    LIMIT 1)
+    ORDER BY tilesid
+    LIMIT 5)
+    ;
+        `;
+        console.log(sql);
+        connection.query(sql,
+          function(error, results, fields) {
+            if (error) throw error;
+            res.json(results);
+          }
+        );
   });
   
 

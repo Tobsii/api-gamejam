@@ -64,34 +64,10 @@ router.get('/getusername/:userId', function (req, res, next) {
   res.set('Content-Type', 'application/json')
   // req.SetRequestHeader("Content-Type", "application/json");
   connection.query(
-      "SELECT name, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT itemName, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         // res.json(results);
-      }
-    );
-});
-
-// Get Users Health
-router.get('/getuserhealth/:userId', function (req, res, next) {
-  console.log('Request Type:', req.method);
-  connection.query(
-      "SELECT health, userid FROM `users` WHERE userid = ?", req.params.userId,
-      function(error, results, fields) {
-        if (error) throw error;
-        res.json(results);
-      }
-    );
-});
-
-// Get Users Immunsystem
-router.get('/getuserimmunsystem/:userId', function (req, res, next) {
-  console.log('Request Type:', req.method);
-  connection.query(
-      "SELECT immunsystem, userid FROM `users` WHERE userid = ?", req.params.userId,
-      function(error, results, fields) {
-        if (error) throw error;
-        res.json(results);
       }
     );
 });
@@ -160,7 +136,7 @@ router.get('/getuserskills/:userId', function (req, res, next) {
 router.get('/getuserhp/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT hp, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT hP, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -184,7 +160,7 @@ router.get('/getuserarmor/:userId', function (req, res, next) {
 router.get('/getusercritchance/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT critchance, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT critChance, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -196,7 +172,7 @@ router.get('/getusercritchance/:userId', function (req, res, next) {
 router.get('/getusermisschance/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT misschance, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT missChance, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -208,7 +184,7 @@ router.get('/getusermisschance/:userId', function (req, res, next) {
 router.get('/getuserblockchance/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT blockchance, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT blockChance, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -220,7 +196,7 @@ router.get('/getuserblockchance/:userId', function (req, res, next) {
 router.get('/getuserbasedamage/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT basedamage, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT damage, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -232,7 +208,7 @@ router.get('/getuserbasedamage/:userId', function (req, res, next) {
 router.get('/getuserattackspeed/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT attackspeed, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT attackSpeed, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -264,23 +240,11 @@ router.get('/getuserhygiene/:userId', function (req, res, next) {
     );
 });
 
-// Get user luck
-router.get('/getuserluck/:userId', function (req, res, next) {
-  console.log('Request Type:', req.method);
-  connection.query(
-      "SELECT luck, userid FROM `users` WHERE userid = ?", req.params.userId,
-      function(error, results, fields) {
-        if (error) throw error;
-        res.json(results);
-      }
-    );
-});
-
 // Get user influence
 router.get('/getuserinfluence/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT influence, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT einfluss, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -292,7 +256,7 @@ router.get('/getuserinfluence/:userId', function (req, res, next) {
 router.get('/getuserxp/:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT xp, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT erfahrung, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -304,7 +268,7 @@ router.get('/getuserxp/:userId', function (req, res, next) {
 router.get('/getuserintelligence /:userId', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "SELECT intelligence, userid FROM `users` WHERE userid = ?", req.params.userId,
+      "SELECT intelligenz, userid FROM `users` WHERE userid = ?", req.params.userId,
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -363,10 +327,52 @@ router.get('/deleteuser/:userId', function (req, res, next) {
 // create a new user
 router.get('/newuser/:name', function (req, res, next) {
   console.log('Request Type:', req.method);
-  var name = req.params.name;
-
-  connection.query(
-    "INSERT INTO users (name, health, immunsystem, longtitude, latitude, level, buildings, sellitems, items, skills, hp, armor, critchance, misschance, blockchance, basedamage, attackspeed, leadership, hygiene, luck, influence, xp, intelligence, charisma, fitness, npcs) VALUES ("+ "\'"+ name + "\'" + ", 10,5,5.00,5.88,1,NULL,NULL,NULL,NULL,0,0,0,0,0,0,0,0,10,0,0,0,0,-20,20,NULL)", [name],
+  var username = req.params.name;
+  var sql = `INSERT INTO users (
+    itemName, description, itemCost, iconCount, 
+    isStackable, isBuyable, itemType, iconTexture, 
+    leadership, infektion, hygiene, einfluss, 
+    erfahrung, intelligenz, charisma, level, 
+    fitness, longitude, latitude, hP, 
+    armor, critChance, missChance, blockChance, 
+    damage, attackSpeed, npcs, buildings, items, sellitems, skills)
+  VALUES (
+    \'${username}\',
+    \'Lorem ipsum dolor sit amet, consetetur
+      Lorem ipsum dolor sit amet, consetetur\',
+      0.0,
+      0,
+      1,
+      1,
+      \'Character\',
+      \'Character\',
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      48.0498543,
+      8.210878,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL
+  ); 
+`;
+console.log(sql);
+  connection.query(sql,
       function(error, results, fields) {
         if (error) {
           throw error;
@@ -385,18 +391,6 @@ router.get('/updateuserhealth/:userid/:health', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
       "UPDATE `users` SET health = health + ? WHERE userid = ?", [req.params.health, req.params.userid],
-      function(error, results, fields) {
-        if (error) throw error;
-        res.json(results);
-      }
-    );
-});
-
-// update Users immunsystem
-router.get('/updateuserimmunsystem/:userid/:immunsystem', function (req, res, next) {
-  console.log('Request Type:', req.method);
-  connection.query(
-      "UPDATE `users` SET immunsystem = immunsystem + ? WHERE userid = ?", [req.params.immunsystem, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -432,7 +426,7 @@ router.get('/updateusersposition/:userid/:latitude/:longtitude', function (req, 
 router.get('/updateuserhp/:userid/:hp', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET hp = hp + ? WHERE userid = ?", [req.params.hp, req.params.userid],
+      "UPDATE `users` SET hP = hP + ? WHERE userid = ?", [req.params.hp, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -456,7 +450,7 @@ router.get('/updateuserarmor/:userid/:armor', function (req, res, next) {
 router.get('/updateusercritchance/:userid/:critchance', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET critchance  = critchance  + ? WHERE userid = ?", [req.params.critchance, req.params.userid],
+      "UPDATE `users` SET critChance  = critChance  + ? WHERE userid = ?", [req.params.critchance, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -468,7 +462,7 @@ router.get('/updateusercritchance/:userid/:critchance', function (req, res, next
 router.get('/updateusermisschance/:userid/:misschance', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET misschance  = misschance  + ? WHERE userid = ?", [req.params.misschance, req.params.userid],
+      "UPDATE `users` SET missChance  = missChance  + ? WHERE userid = ?", [req.params.misschance, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -480,7 +474,7 @@ router.get('/updateusermisschance/:userid/:misschance', function (req, res, next
 router.get('/updateuserblockchance/:userid/:blockchance', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET blockchance  = blockchance + ? WHERE userid = ?", [req.params.blockchance, req.params.userid],
+      "UPDATE `users` SET blockChance  = blockChance + ? WHERE userid = ?", [req.params.blockchance, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -492,7 +486,7 @@ router.get('/updateuserblockchance/:userid/:blockchance', function (req, res, ne
 router.get('/updateuserbasedamage/:userid/:basedamage', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET basedamage  = basedamage + ? WHERE userid = ?", [req.params.basedamage, req.params.userid],
+      "UPDATE `users` SET damage  = damage + ? WHERE userid = ?", [req.params.basedamage, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -504,7 +498,7 @@ router.get('/updateuserbasedamage/:userid/:basedamage', function (req, res, next
 router.get('/updateuserattackspeed/:userid/:attackspeed', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET attackspeed  = attackspeed + ? WHERE userid = ?", [req.params.attackspeed, req.params.userid],
+      "UPDATE `users` SET attackSpeed  = attackSpeed + ? WHERE userid = ?", [req.params.attackspeed, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -536,23 +530,11 @@ router.get('/updateuserhygiene/:userid/:hygiene', function (req, res, next) {
     );
 });
 
-// update users luck
-router.get('/updateuserluck/:userid/:luck', function (req, res, next) {
-  console.log('Request Type:', req.method);
-  connection.query(
-      "UPDATE `users` SET luck  = luck + ? WHERE userid = ?", [req.params.luck, req.params.userid],
-      function(error, results, fields) {
-        if (error) throw error;
-        res.json(results);
-      }
-    );
-});
-
 // update users influence
 router.get('/updateuserinfluence/:userid/:influence', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET influence  = influence + ? WHERE userid = ?", [req.params.influence, req.params.userid],
+      "UPDATE `users` SET einfluss  = einfluss + ? WHERE userid = ?", [req.params.influence, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -564,7 +546,7 @@ router.get('/updateuserinfluence/:userid/:influence', function (req, res, next) 
 router.get('/updateuserxp/:userid/:xp', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET xp  = xp + ? WHERE userid = ?", [req.params.xp, req.params.userid],
+      "UPDATE `users` SET erfahrung  = erfahrung + ? WHERE userid = ?", [req.params.xp, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);
@@ -576,7 +558,7 @@ router.get('/updateuserxp/:userid/:xp', function (req, res, next) {
 router.get('/updateuserintelligence/:userid/:intelligence', function (req, res, next) {
   console.log('Request Type:', req.method);
   connection.query(
-      "UPDATE `users` SET intelligence  = intelligence + ? WHERE userid = ?", [req.params.intelligence, req.params.userid],
+      "UPDATE `users` SET intelligenz  = intelligenz + ? WHERE userid = ?", [req.params.intelligence, req.params.userid],
       function(error, results, fields) {
         if (error) throw error;
         res.json(results);

@@ -172,7 +172,6 @@ router.get('/:longtitude/:latitude', function (req, res) {
     }
     
     // "\'"+ name + "\'" -> Escape ANführungszeichen
-    // OLD QUERY "INSERT IGNORE INTO tiles (longmax, longmin, buildings, resources, events, dungeons, latmax, latmin) VALUES (" + longmaxgenerate + ","+ longmingenerate + ",NULL,NULL,NULL,NULL," + latmaxgenerate + "," + latmingenerate + ")"
     // Speichere jedes neue Tile in der Datenbank
 
     function generateATile(longmaxgenerate, longmingenerate, buildinggenerate, ressourcesgenerate, eventsgenerate, dungeonsgenerate, latmaxgenerate, latmingenerate) {

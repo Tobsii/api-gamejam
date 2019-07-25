@@ -1,8 +1,5 @@
 // Here schould be all routes for tiles
 /*
-- Get Single Tile -> tiles/gettile/:longtitude/:latitude
-- Get tile and neighbours - tiles/getmoretiles/:longtitude/:latitude (TODO)
-
 TODO: JSON der Tiles bearbeiten, Zufallstile erzeugen
 */
 
@@ -26,7 +23,7 @@ router.get('/deleteall', function (req, res, next) {
 router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(
-        "SELECT * FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ?", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
+        "SELECT * FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ? LIMIT 1", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
         function(error, results, fields) {
           if (error) throw error;
           res.json(results);
@@ -38,7 +35,7 @@ router.get('/gettile/:longtitude/:latitude', function (req, res, next) {
   router.get('/gettileressources/:longtitude/:latitude', function (req, res, next) {
     console.log('Request Type:', req.method);
     connection.query(
-        "SELECT resources FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ?", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
+        "SELECT resources FROM `tiles` WHERE longmax > ? AND longmin < ? AND latmax > ? AND latmin < ? LIMIT 1", [req.params.longtitude, req.params.longtitude, req.params.latitude, req.params.latitude],
         function(error, results, fields) {
           if (error) throw error;
           res.json(results);

@@ -4,7 +4,7 @@
 + get part of json
 + update part of json
 + move part of json to other json
-+ user initialisierung
++ user Initialisierung
  */
 
 const express = require('express');
@@ -45,6 +45,47 @@ router.get('/getuser/:userId', function (req, res, next) {
         }
       );
   });
+
+  // Get User for serialization
+  router.get('/getuserforserialization/:userId', function (req, res, next) {
+    console.log('Request Type:', req.method);
+    var sql = `SELECT 
+      itemName,
+      description,
+      itemCost,
+      iconCount,
+      isStackable,
+      isBuyable,
+      itemType,
+      iconTexture,
+      leadership,
+      infektion,
+      hygiene,
+      einfluss,
+      erfahrung,
+      intelligenz,
+      charisma,
+      level,
+      fitness,
+      longitude,
+      latitude,
+      hP,
+      armor,
+      critChance,
+      missChance,
+      blockChance,
+      damage,
+      attackSpeed
+    FROM users WHERE userid = ?;`;
+    connection.query(
+        sql, req.params.userId,
+        function(error, results, fields) {
+          if (error) throw error;
+          res.json(results);
+        }
+      );
+  });
+
 
 // Get Users Position
 router.get('/getuserposition/:userId', function (req, res, next) {

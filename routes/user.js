@@ -46,6 +46,99 @@ router.get('/getuser/:userId', function (req, res, next) {
       );
   });
 
+  // NewUser For dev
+  router.get('/getuserforserialization/:userId', function (req, res, next) {
+    console.log('Request Type:', req.method);
+    var itemName      =req.body.itemName
+    var description=req.body.description
+     var itemCos=req.body.itemCos
+     var iconCount=req.body.iconCount
+     var isStackable=req.body.isStackable
+     var isBuyable=req.body.isBuyable
+     var itemType=req.body.itemType
+     var iconTexture=req.body.iconTexture
+     var leadership=req.body.leadership
+     var infektion=req.body.infektion
+     var hygiene=req.body.hygiene
+     var einfluss=req.body.einfluss
+     var erfahrung=req.body.erfahrung
+     var intelligenz=req.body.intelligenz
+     var charisma=req.body.charisma
+     var level=req.body.level
+     var fitness=req.body.fitness
+     var longitude=req.body.longitude
+     var latitude=req.body.latitude
+     var hP=req.body.hP
+     var armor=req.body.armor
+     var critChance=req.body.critChance
+     var missChance=req.body.missChance
+     var blockChance=req.body.blockChance
+     var damage=req.body.damage
+     var attackSpeed=req.body.attackSpeed
+    var sql = `UNSERT INTO users (
+      itemName,
+      description,
+      itemCost,
+      iconCount,
+      isStackable,
+      isBuyable,
+      itemType,
+      iconTexture,
+      leadership,
+      infektion,
+      hygiene,
+      einfluss,
+      erfahrung,
+      intelligenz,
+      charisma,
+      level,
+      fitness,
+      longitude,
+      latitude,
+      hP,
+      armor,
+      critChance,
+      missChance, 
+      blockChance,
+      damage,
+      attackSpeed )
+    VALUES(\
+    \'${itemName}\',
+    \'${description}\',
+      ${itemCost},
+      ${iconCount},
+      ${isStackable},
+      ${isBuyable},
+      \'${itemType}\',
+      \'${iconTexture}\',
+      ${leadership},
+      ${infektion},
+      ${hygiene},
+      ${einfluss},
+      ${erfahrung},
+      ${intelligenz},
+      ${charisma},
+      ${level},
+      ${fitness},
+      ${longitude},
+      ${latitude},
+      ${hP},
+      ${armor},
+      ${critChance},
+      ${missChance},
+      ${blockChance},
+      ${damage},
+      ${attackSpeed}
+    );`;
+    connection.query(
+        sql, req.params.userId,
+        function(error, results, fields) {
+          if (error) throw error;
+          res.json(results);
+        }
+      );
+  });
+
   // Get User for serialization
   router.get('/getuserforserialization/:userId', function (req, res, next) {
     console.log('Request Type:', req.method);

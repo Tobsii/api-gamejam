@@ -47,7 +47,7 @@ router.get('/getuser/:userId', function (req, res, next) {
   });
 
   // NewUser For dev
-  router.get('/getuserforserialization/:userId', function (req, res, next) {
+  router.get('/newuserdev/', function (req, res, next) {
     console.log('Request Type:', req.method);
     var itemName      =req.body.itemName
     var description=req.body.description
